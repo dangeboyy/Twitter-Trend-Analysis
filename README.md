@@ -1,4 +1,4 @@
-# thesis
+# Thesis
 Sentiment analysis of twitter topics
 
 This project is made in order for users to see public opinion on trends quickly and without prejudice. 
