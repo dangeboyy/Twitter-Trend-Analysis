@@ -87,20 +87,14 @@ writer = csv.writer(f)
 def calculatePercentage(a, b):
     return 100 * float(a) / float(b)
 
-def add_to_same_array(removed_same, full_array,tweets):
+def add_to_same_array(trend_name, full_array,tweets):
     for tweet in tweets:
-        if 'retweeted_status' in dir(tweet):
-            text=tweet.retweeted_status.full_text
-        else:
-            text=tweet.full_text
+        if tweet.full_text.startswith("RT"):
+            continue
 
+        text=tweet.full_text
+        text = text.replace(trend_name,"")
 
-        if 'retweeted_status' in tweet._json:
-            text=tweet._json['retweeted_status']['full_text']
-        else:
-            text =tweet.full_text
-
-        removed_same.add(text)
         full_array.append(text)
 
 def text_blob_analysis(currentAnalysis):
@@ -157,7 +151,7 @@ def print_polarity_result(polarity_tb,polarity_vdr):
 
 def traversingTrends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
-        trend_name = tweeter_trends['trends'][i+1]['name']
+        trend_name = tweeter_trends['trends'][i+3]['name']
         print("Trend Name:"+trend_name)
         parameters = {"q": trend_name, "tweet_mode": 'extended'}
 
@@ -182,13 +176,13 @@ def traversingTrends(tweeter_trends):
 
         #tweets=api.search_tweets(trend_name,count=1000,tweet_mode='extended', lang='en')
 
-        removed_same = set()
+        #removed_same = set()
         full_array=[]
 
-        add_to_same_array(removed_same, full_array, tweets)
+        add_to_same_array(trend_name, full_array, tweets)
         analyzer=SentimentIntensityAnalyzer()
 
-        for tweet in removed_same:
+        for tweet in full_array:
             currentAnalysis = textblob.TextBlob(tweet)
             polarity_tb += currentAnalysis.sentiment.polarity
             print(tweet)
@@ -204,7 +198,7 @@ def traversingTrends(tweeter_trends):
             negative_vdr += neg_vdr
             
 
-        append_single_tweet_to_JSON(filtered_tweet_array, trend_name)
+        #append_single_tweet_to_JSON(filtered_tweet_array, trend_name)
 
         append_to_JSON_file(search_resp, trend_name)
 
@@ -225,9 +219,9 @@ def traversingTrends(tweeter_trends):
         print_text_blob_total(positive_tb,negative_tb,neutral_tb)
         print_vader_total(positive_vdr,negative_vdr,neutral_vdr)
         print_polarity_result(polarity_tb,polarity_vdr)
-        print("Removed_Same Size:" + str(len(removed_same)))
+        #print("Removed_Same Size:" + str(len(removed_same)))
         print("full size:"+str(len(full_array)))
-        removed_same.clear()
+        #removed_same.clear()
         full_array.clear()
         break
 
