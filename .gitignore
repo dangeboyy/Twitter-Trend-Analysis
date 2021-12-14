@@ -1,0 +1,5 @@
+unfilteredtweets/
+.vscode/
+filteredtweets/
+filtered_data.csv
+trends.json

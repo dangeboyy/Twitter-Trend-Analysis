@@ -7,7 +7,7 @@ from os import path, remove
 import os
 import textblob
 import tweepy
-from vaderSentiment import SentimentIntensityAnalyzer
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 consumer_key = 'z9QiZqqYDtz2iuD6YbnuVo1NS'
@@ -89,6 +89,12 @@ def calculatePercentage(a, b):
 
 def add_to_same_array(removed_same, full_array,tweets):
     for tweet in tweets:
+        if 'retweeted_status' in dir(tweet):
+            text=tweet.retweeted_status.full_text
+        else:
+            text=tweet.full_text
+
+
         if 'retweeted_status' in tweet._json:
             text=tweet._json['retweeted_status']['full_text']
         else:
