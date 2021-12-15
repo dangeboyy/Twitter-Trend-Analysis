@@ -70,7 +70,7 @@ def append_single_tweet_to_JSON(tweet_response, trend_name):
     with open("./filteredtweets/" + trend_name + ".json", "a+") as newfile:
         newfile.write(json_tweet_obj)
 
-
+    #ege !
 def parse_tweet(search):
     pass
 
