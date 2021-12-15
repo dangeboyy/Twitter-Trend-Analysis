@@ -88,9 +88,10 @@ def calculatePercentage(a, b):
     return 100 * float(a) / float(b)
 
 def add_to_same_array(trend_name, full_array,tweets):
+    rt_count = 0
     for tweet in tweets:
         if tweet.full_text.startswith("RT"):
-            continue
+            rt_count += 1
 
         text=tweet.full_text
         text = text.replace(trend_name,"")
@@ -151,7 +152,7 @@ def print_polarity_result(polarity_tb,polarity_vdr):
 
 def traversingTrends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
-        trend_name = tweeter_trends['trends'][i+3]['name']
+        trend_name = tweeter_trends['trends'][i+10]['name']
         print("Trend Name:"+trend_name)
         parameters = {"q": trend_name, "tweet_mode": 'extended'}
 
@@ -171,7 +172,7 @@ def traversingTrends(tweeter_trends):
         polarity_vdr = 0
 
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name, lang='en',tweet_mode="extended").items(1200)
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name, lang='en',tweet_mode="extended").items(500)
 
 
         #tweets=api.search_tweets(trend_name,count=1000,tweet_mode='extended', lang='en')
@@ -192,7 +193,7 @@ def traversingTrends(tweeter_trends):
             negative_tb += neg_tb
 
             polarity_vdr+=(analyzer.polarity_scores(tweet))["compound"]
-            neut_vdr,pos_vdr,neg_vdr = text_blob_analysis(currentAnalysis)
+            neut_vdr,pos_vdr,neg_vdr = vader_analysis(analyzer,tweet)
             neutral_vdr += neut_vdr
             positive_vdr += pos_vdr
             negative_vdr += neg_vdr
