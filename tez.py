@@ -87,6 +87,9 @@ writer = csv.writer(f)
 def calculatePercentage(a, b):
     return 100 * float(a) / float(b)
 
+
+
+
 def add_to_same_array(trend_name, full_array,tweets):
     rt_count = 0
     for tweet in tweets:
@@ -97,6 +100,7 @@ def add_to_same_array(trend_name, full_array,tweets):
         text = text.replace(trend_name,"")
 
         full_array.append(text)
+    return rt_count
 
 def text_blob_analysis(currentAnalysis):
     if currentAnalysis.sentiment.polarity == 0:
@@ -180,7 +184,7 @@ def traversingTrends(tweeter_trends):
         #removed_same = set()
         full_array=[]
 
-        add_to_same_array(trend_name, full_array, tweets)
+        rt_count = add_to_same_array(trend_name, full_array, tweets)
         analyzer=SentimentIntensityAnalyzer()
 
         for tweet in full_array:
@@ -222,6 +226,7 @@ def traversingTrends(tweeter_trends):
         print_polarity_result(polarity_tb,polarity_vdr)
         #print("Removed_Same Size:" + str(len(removed_same)))
         print("full size:"+str(len(full_array)))
+        print("retweet size: " + str(rt_count))
         #removed_same.clear()
         full_array.clear()
         break
