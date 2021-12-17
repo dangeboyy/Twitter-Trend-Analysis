@@ -70,7 +70,6 @@ def append_single_tweet_to_JSON(tweet_response, trend_name):
     with open("./filteredtweets/" + trend_name + ".json", "a+") as newfile:
         newfile.write(json_tweet_obj)
 
-    #ege !
 def parse_tweet(search):
     pass
 
@@ -91,13 +90,13 @@ def calculatePercentage(a, b):
 
 
 def add_to_same_array(trend_name, full_array,tweets):
-    rt_count = 0
+    # rt_count = 0
     for tweet in tweets:
-        if tweet.full_text.startswith("RT"):
-            rt_count += 1
-
-        text=tweet.full_text
+        
+        text = tweet.full_text
         text = text.replace(trend_name,"")
+        # if "retweeted_status" in dir(tweet):
+        #     rt_count +=1
 
         full_array.append(text)
     return rt_count
@@ -156,13 +155,8 @@ def print_polarity_result(polarity_tb,polarity_vdr):
 
 def traversingTrends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
-        trend_name = tweeter_trends['trends'][i+10]['name']
+        trend_name = tweeter_trends['trends'][i+5]['name']
         print("Trend Name:"+trend_name)
-        parameters = {"q": trend_name, "tweet_mode": 'extended'}
-
-        # getting tweets of trending topics via the search endpoint of twitter standard api v1.1
-        search_resp = requests.get(tweet_search_url, headers=trend_headers, params=parameters).json()
-
      
         filtered_tweet_array = []
         positive_tb = 0
@@ -176,8 +170,7 @@ def traversingTrends(tweeter_trends):
         polarity_vdr = 0
 
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name, lang='en',tweet_mode="extended").items(500)
-
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(100)
 
         #tweets=api.search_tweets(trend_name,count=1000,tweet_mode='extended', lang='en')
 
@@ -205,7 +198,8 @@ def traversingTrends(tweeter_trends):
 
         #append_single_tweet_to_JSON(filtered_tweet_array, trend_name)
 
-        append_to_JSON_file(search_resp, trend_name)
+        append_to_JSON_file(full_array,trend_name)
+        
 
         # numberOfTweets=positive+negative+neutral
         # positive=calculatePercentage(positive,numberOfTweets)
