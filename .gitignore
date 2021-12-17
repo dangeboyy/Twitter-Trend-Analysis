@@ -3,3 +3,4 @@ unfilteredtweets/
 filteredtweets/
 filtered_data.csv
 trends.json
+test/
