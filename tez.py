@@ -5,9 +5,13 @@ import json
 import csv
 from os import path, remove
 import os
-import textblob
 import tweepy
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from sklearn.cluster import KMeans
+from pandas import DataFrame
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 consumer_key = 'z9QiZqqYDtz2iuD6YbnuVo1NS'
@@ -117,20 +121,23 @@ def print_polarity_result(polarity_vdr):
     print("#################################")
 
 def traversingTrends(tweeter_trends):
+
     for i in range(len(tweeter_trends['trends'])):
-        trend_name = tweeter_trends['trends'][i+5]['name']
+        trend_name = tweeter_trends['trends'][i+1]['name']
         print("Trend Name: " + trend_name)
      
         filtered_tweet_array = []
 
-        positive_vdr = 0
-        negative_vdr = 0
-        neutral_vdr= 0
-        polarity_vdr = 0
+        total_positive_vdr = 0
+        total_negative_vdr = 0
+        total_neutral_vdr= 0
+        total_polarity_vdr = 0
 
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(30)
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(100)
         full_array=[]
+        positives = []
+        negatives = []
 
         rt_count = add_to_same_array(trend_name, full_array, tweets)
         analyzer=SentimentIntensityAnalyzer()
@@ -141,11 +148,15 @@ def traversingTrends(tweeter_trends):
             
             print(tweet.full_text)
 
-            polarity_vdr+=(analyzer.polarity_scores(tweet.full_text))["compound"]
+            total_polarity_vdr+=(analyzer.polarity_scores(tweet.full_text))["compound"]
             neut_vdr,pos_vdr,neg_vdr = vader_analysis(analyzer,tweet.full_text)
-            neutral_vdr += neut_vdr
-            positive_vdr += pos_vdr
-            negative_vdr += neg_vdr
+            total_neutral_vdr += neut_vdr
+            total_positive_vdr += pos_vdr
+            total_negative_vdr += neg_vdr
+            
+            positives.append(pos_vdr)
+            negatives.append(neg_vdr)
+
 
             tweet_json_object = {
                 "id": tweet.id,
@@ -169,15 +180,18 @@ def traversingTrends(tweeter_trends):
         # neutral = calculatePercentage(neutral, numberOfTweets)
 
 
-        positive_vdr = format(positive_vdr, '.2f')
-        negative_vdr = format(negative_vdr, '.2f')
-        neutral_vdr = format(neutral_vdr, '.2f')
+        positive_vdr = format(total_positive_vdr, '.2f')
+        negative_vdr = format(total_negative_vdr, '.2f')
+        neutral_vdr = format(total_neutral_vdr, '.2f')
 
 
         print_vader_total(positive_vdr,negative_vdr,neutral_vdr)
-        print_polarity_result(polarity_vdr)
+        print_polarity_result(total_polarity_vdr)
         print("full size: " + str(len(full_array)))
         print("retweet size: " + str(rt_count))
+
+
+
         full_array.clear()
         break
 
