@@ -9,6 +9,7 @@ import tweepy
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from sklearn.cluster import KMeans
 from pandas import DataFrame
+from sklearn.cluster import DBSCAN
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -92,6 +93,12 @@ def add_to_same_array(trend_name, full_array,tweets):
 
     return rt_count
 
+def df_for_clustering(pos,neg,pol):
+    Data={'x':pos,'y':neg,'z':pol
+     }
+    df=DataFrame(Data, columns=['x','y','z'])
+    return df
+
 def vader_analysis(analyzer,tweet):
     if (analyzer.polarity_scores(tweet))["compound"]==0:
         print("Neutral for Vader")
@@ -136,8 +143,9 @@ def traversingTrends(tweeter_trends):
 
         tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(100)
         full_array=[]
-        positives = []
-        negatives = []
+        positive_values=[]
+        negative_values=[]
+        polarity_values=[]
 
         rt_count = add_to_same_array(trend_name, full_array, tweets)
         analyzer=SentimentIntensityAnalyzer()
@@ -154,8 +162,9 @@ def traversingTrends(tweeter_trends):
             total_positive_vdr += pos_vdr
             total_negative_vdr += neg_vdr
             
-            positives.append(pos_vdr)
-            negatives.append(neg_vdr)
+            positive_values.append(analyzer.polarity_scores(tweet.full_text)["pos"]+1)
+            negative_values.append(analyzer.polarity_scores(tweet.full_text)["neg"]+1)
+            polarity_values.append(analyzer.polarity_scores(tweet.full_text)["compound"]+1)
 
 
             tweet_json_object = {
@@ -190,7 +199,23 @@ def traversingTrends(tweeter_trends):
         print("full size: " + str(len(full_array)))
         print("retweet size: " + str(rt_count))
 
-
+        df = df_for_clustering(positive_values,negative_values,polarity_values)
+        print("df")
+        print(df)
+        print("df")
+        # clustering = DBSCAN(eps=5, min_samples=3).fit(df)
+        # labels = clustering.labels_
+        # numberofclusters = len(set(labels)) - (1 if -1 in labels else 0)
+        # plt.title('DBSCAN ' + labels + ' Number of clusters: %d' % numberofclusters)
+        # plt.scatter(df['X'], df['Y'],df['Z'], c=clustering.labels_.astype(float))
+        # plt.show()
+        kmeans=KMeans(n_clusters=3 , init='k-means++').fit(df)
+        centroids = kmeans.cluster_centers_
+        plt.scatter(df['x'],df['y'],df['z'],c=kmeans.labels_.astype(float))
+        plt.scatter(centroids[:, 0], centroids[:, 1], c='red')
+        plt.xlabel("positives")
+        plt.ylabel("negatives")
+        plt.show()
 
         full_array.clear()
         break
