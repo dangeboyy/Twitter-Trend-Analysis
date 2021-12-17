@@ -90,26 +90,17 @@ def calculatePercentage(a, b):
 
 
 def add_to_same_array(trend_name, full_array,tweets):
-    # rt_count = 0
+    rt_count = 0
     for tweet in tweets:
         
         text = tweet.full_text
         text = text.replace(trend_name,"")
-        # if "retweeted_status" in dir(tweet):
-        #     rt_count +=1
+        if "retweeted_status" in dir(tweet):
+            rt_count +=1
 
         full_array.append(text)
 
-def text_blob_analysis(currentAnalysis):
-    if currentAnalysis.sentiment.polarity == 0:
-        print("Neutral for TextBlob")
-        return 1,0,0
-    elif currentAnalysis.sentiment.polarity > 0.00:
-        print("Positive for TextBlob")
-        return 0,1,0
-    elif currentAnalysis.sentiment.polarity < 0.00:
-        print("Negative for TextBlob")
-        return 0,0,1
+    return rt_count
 
 def vader_analysis(analyzer,tweet):
     if (analyzer.polarity_scores(tweet))["compound"]==0:
@@ -122,12 +113,6 @@ def vader_analysis(analyzer,tweet):
         print("Negative for Vader")
         return 0,0,1
 
-def print_text_blob_total(positive_tb,negative_tb,neutral_tb):
-    print('---------------------TextBlob-------------------------------------------------------')
-    print("Pozitif:" + positive_tb)
-    print("Negatif:" + negative_tb)
-    print("Neutral:" + neutral_tb)
-
 def print_vader_total(positive_vdr,negative_vdr,neutral_vdr):
     print('-----------------------Vader-----------------------------------------------------')
     print("Pozitif:" + positive_vdr)
@@ -135,14 +120,7 @@ def print_vader_total(positive_vdr,negative_vdr,neutral_vdr):
     print("Neutral:" + neutral_vdr)
     print("-----------------------------------------------------------------------------------")
 
-def print_polarity_result(polarity_tb,polarity_vdr):
-    print("##########TextBlob###########")
-    if polarity_tb > 0:
-        print('Positive')
-    elif polarity_tb < 0:
-        print('Negative')
-    elif polarity_tb == 0:
-        print('Neutral')
+def print_polarity_result(polarity_vdr):
     print("##########Vader###########")
     if polarity_vdr > 0:
         print('Positive')
@@ -155,13 +133,9 @@ def print_polarity_result(polarity_tb,polarity_vdr):
 def traversingTrends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
         trend_name = tweeter_trends['trends'][i+5]['name']
-        print("Trend Name:"+trend_name)
+        print("Trend Name: " + trend_name)
      
         filtered_tweet_array = []
-        positive_tb = 0
-        negative_tb = 0
-        neutral_tb = 0
-        polarity_tb = 0
 
         positive_vdr = 0
         negative_vdr = 0
@@ -169,24 +143,14 @@ def traversingTrends(tweeter_trends):
         polarity_vdr = 0
 
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(100)
-
-        #tweets=api.search_tweets(trend_name,count=1000,tweet_mode='extended', lang='en')
-
-        #removed_same = set()
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(1000)
         full_array=[]
 
-        add_to_same_array(trend_name, full_array, tweets)
+        rt_count = add_to_same_array(trend_name, full_array, tweets)
         analyzer=SentimentIntensityAnalyzer()
 
         for tweet in full_array:
-            currentAnalysis = textblob.TextBlob(tweet)
-            polarity_tb += currentAnalysis.sentiment.polarity
             print(tweet)
-            neut_tb,pos_tb,neg_tb = text_blob_analysis(currentAnalysis)
-            neutral_tb += neut_tb
-            positive_tb += pos_tb
-            negative_tb += neg_tb
 
             polarity_vdr+=(analyzer.polarity_scores(tweet))["compound"]
             neut_vdr,pos_vdr,neg_vdr = vader_analysis(analyzer,tweet)
@@ -205,21 +169,16 @@ def traversingTrends(tweeter_trends):
         # negative = calculatePercentage(negative, numberOfTweets)
         # neutral = calculatePercentage(neutral, numberOfTweets)
 
-        positive_tb = format(positive_tb, '.2f')
-        negative_tb = format(negative_tb, '.2f')
-        neutral_tb = format(neutral_tb, '.2f')
 
         positive_vdr = format(positive_vdr, '.2f')
         negative_vdr = format(negative_vdr, '.2f')
         neutral_vdr = format(neutral_vdr, '.2f')
 
 
-        print_text_blob_total(positive_tb,negative_tb,neutral_tb)
         print_vader_total(positive_vdr,negative_vdr,neutral_vdr)
-        print_polarity_result(polarity_tb,polarity_vdr)
-        #print("Removed_Same Size:" + str(len(removed_same)))
-        print("full size:"+str(len(full_array)))
-        #removed_same.clear()
+        print_polarity_result(polarity_vdr)
+        print("full size: " + str(len(full_array)))
+        print("retweet size: " + str(rt_count))
         full_array.clear()
         break
 
