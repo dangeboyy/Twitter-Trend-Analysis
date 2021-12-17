@@ -53,22 +53,14 @@ trend_url = 'https://api.twitter.com/1.1/trends/place.json'
 trend_resp = requests.get(trend_url, headers=trend_headers, params=trend_params)
 
 
-def append_to_JSON_file(search_response, trend_name):
+def append_to_JSON_file(filtered_array, trend_name):
     if (not path.exists(os.getcwd() + "/unfilteredtweets")):
         os.mkdir(os.getcwd() + "/unfilteredtweets")
 
-    json_search_object = json.dumps(search_response, indent=4)
+    json_search_object = json.dumps(filtered_array, indent=4)
     with open("./unfilteredtweets/" + trend_name + ".json", "a+") as newfile:
         newfile.write(json_search_object)
 
-
-def append_single_tweet_to_JSON(tweet_response, trend_name):
-    if (not path.exists(os.getcwd() + "/filteredtweets")):
-        os.mkdir(os.getcwd() + "/filteredtweets")
-
-    json_tweet_obj = json.dumps(tweet_response, indent=4)
-    with open("./filteredtweets/" + trend_name + ".json", "a+") as newfile:
-        newfile.write(json_tweet_obj)
 
 def parse_tweet(search):
     pass
@@ -86,19 +78,13 @@ writer = csv.writer(f)
 def calculatePercentage(a, b):
     return 100 * float(a) / float(b)
 
-
-
-
 def add_to_same_array(trend_name, full_array,tweets):
     rt_count = 0
     for tweet in tweets:
-        
-        text = tweet.full_text
-        text = text.replace(trend_name,"")
         if "retweeted_status" in dir(tweet):
             rt_count +=1
 
-        full_array.append(text)
+        full_array.append(tweet)
 
     return rt_count
 
@@ -143,25 +129,38 @@ def traversingTrends(tweeter_trends):
         polarity_vdr = 0
 
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(1000)
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en',tweet_mode="extended").items(30)
         full_array=[]
 
         rt_count = add_to_same_array(trend_name, full_array, tweets)
         analyzer=SentimentIntensityAnalyzer()
 
         for tweet in full_array:
-            print(tweet)
+            
+            tweet.full_text = tweet.full_text.replace(trend_name,"")
+            
+            print(tweet.full_text)
 
-            polarity_vdr+=(analyzer.polarity_scores(tweet))["compound"]
-            neut_vdr,pos_vdr,neg_vdr = vader_analysis(analyzer,tweet)
+            polarity_vdr+=(analyzer.polarity_scores(tweet.full_text))["compound"]
+            neut_vdr,pos_vdr,neg_vdr = vader_analysis(analyzer,tweet.full_text)
             neutral_vdr += neut_vdr
             positive_vdr += pos_vdr
             negative_vdr += neg_vdr
+
+            tweet_json_object = {
+                "id": tweet.id,
+                "lang": tweet.lang,
+                "retweet_count" : tweet.retweet_count,
+                "favorite_count" : tweet.favorite_count,
+                "full_text" : tweet.full_text
+            }
+
+            filtered_tweet_array.append(tweet_json_object)
             
 
         #append_single_tweet_to_JSON(filtered_tweet_array, trend_name)
 
-        append_to_JSON_file(full_array,trend_name)
+        append_to_JSON_file(filtered_tweet_array,trend_name)
         
 
         # numberOfTweets=positive+negative+neutral
