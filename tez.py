@@ -7,9 +7,7 @@ from os import path, remove
 import os
 import tweepy
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from sklearn.cluster import KMeans
 from pandas import DataFrame
-from sklearn.cluster import DBSCAN
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -100,7 +98,7 @@ def calculatePercentage(a, b):
     return 100 * float(a) / float(b)
 
 
-def add_to_same_array(trend_name, full_array, tweets):
+def add_to_same_array(full_array, tweets):
     rt_count = 0
     for tweet in tweets:
         if "retweeted_status" in dir(tweet):
@@ -109,13 +107,6 @@ def add_to_same_array(trend_name, full_array, tweets):
         full_array.append(tweet)
 
     return rt_count
-
-
-def df_for_clustering(pos, neg, pol):
-    Data = {'x': pos, 'y': neg, 'z': pol
-            }
-    df = DataFrame(Data, columns=['x', 'y', 'z'])
-    return df
 
 
 def vader_analysis(analyzer, tweet):
@@ -213,24 +204,7 @@ def traversingTrends(tweeter_trends):
         print("full size: " + str(len(full_array)))
         print("retweet size: " + str(rt_count))
 
-        # df = df_for_clustering(positive_values, negative_values, polarity_values)
-        # print("df")
-        # print(df)
-        # print("df")
-        # # clustering = DBSCAN(eps=5, min_samples=3).fit(df)
-        # # labels = clustering.labels_
-        # # numberofclusters = len(set(labels)) - (1 if -1 in labels else 0)
-        # # plt.title('DBSCAN ' + labels + ' Number of clusters: %d' % numberofclusters)
-        # # plt.scatter(df['X'], df['Y'],df['Z'], c=clustering.labels_.astype(float))
-        # # plt.show()
-        # kmeans = KMeans(n_clusters=3, init='k-means++').fit(df)
-        # centroids = kmeans.cluster_centers_
-        # plt.scatter(df['x'], df['y'], df['z'], c=kmeans.labels_.astype(float))
-        # plt.scatter(centroids[:, 0], centroids[:, 1], c='red')
-        # plt.xlabel("positives")
-        # plt.ylabel("negatives")
-        # plt.show()
-
+       
         full_array.clear()
         pie_chart(positive_vdr, negative_vdr, neutral_vdr)
         bar_chart(positive_vdr, negative_vdr, neutral_vdr)
