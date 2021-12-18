@@ -88,7 +88,6 @@ def bar_chart(positive, negative, neutral):
     ax.set_ylabel('number of users')
     ax.set_title('Sentiment analysis result of ')
     ax.set_xticks(x, labels)
-    ax.legend()
 
     ax.bar_label(rects, padding=3)
 
@@ -163,7 +162,7 @@ def traversingTrends(tweeter_trends):
         total_neutral_vdr = 0
         total_polarity_vdr = 0
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en', tweet_mode="extended").items(1000)
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en', tweet_mode="extended").items(30)
         full_array = []
 
         rt_count = add_to_same_array(full_array, tweets)
@@ -194,14 +193,7 @@ def traversingTrends(tweeter_trends):
 
             filtered_tweet_array.append(tweet_json_object)
 
-        # append_single_tweet_to_JSON(filtered_tweet_array, trend_name)
-
         append_to_JSON_file(filtered_tweet_array, trend_name)
-
-        # numberOfTweets=positive+negative+neutral
-        # positive=calculatePercentage(positive,numberOfTweets)
-        # negative = calculatePercentage(negative, numberOfTweets)
-        # neutral = calculatePercentage(neutral, numberOfTweets)
 
         positive_vdr = format(total_positive_vdr, '.2f')
         negative_vdr = format(total_negative_vdr, '.2f')
