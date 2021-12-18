@@ -81,6 +81,17 @@ def pie_chart(positive, negative, neutral):
 def bar_chart(positive, negative, neutral):
     labels = ['positive', 'negative', 'neutral']
     sentiment = [float(positive), float(negative), float(neutral)]
+    x = np.arange(len(labels))
+    width = 0.35
+    fig, ax = plt.subplots()
+    rects = ax.bar(x, sentiment, width, label='pos')
+    ax.set_ylabel('number of users')
+    ax.set_title('Sentiment analysis result of ')
+    ax.set_xticks(x, labels)
+    ax.legend()
+
+    ax.bar_label(rects, padding=3)
+
     plt.bar(labels, sentiment, color= ['Blue', 'Red', 'green'])
     plt.show()
 
@@ -152,13 +163,10 @@ def traversingTrends(tweeter_trends):
         total_neutral_vdr = 0
         total_polarity_vdr = 0
 
-        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en', tweet_mode="extended").items(100)
+        tweets = tweepy.Cursor(api.search_tweets, q=trend_name + " -RT", lang='en', tweet_mode="extended").items(1000)
         full_array = []
-        positive_values = []
-        negative_values = []
-        polarity_values = []
 
-        rt_count = add_to_same_array(trend_name, full_array, tweets)
+        rt_count = add_to_same_array(full_array, tweets)
         analyzer = SentimentIntensityAnalyzer()
 
         for tweet in full_array:
@@ -172,16 +180,16 @@ def traversingTrends(tweeter_trends):
             total_positive_vdr += pos_vdr
             total_negative_vdr += neg_vdr
 
-            positive_values.append(analyzer.polarity_scores(tweet.full_text)["pos"] + 1)
-            negative_values.append(analyzer.polarity_scores(tweet.full_text)["neg"] + 1)
-            polarity_values.append(analyzer.polarity_scores(tweet.full_text)["compound"] + 1)
+            
 
             tweet_json_object = {
                 "id": tweet.id,
                 "lang": tweet.lang,
                 "retweet_count": tweet.retweet_count,
                 "favorite_count": tweet.favorite_count,
-                "full_text": tweet.full_text
+                "full_text": tweet.full_text,
+                "vader_result" : analyzer.polarity_scores(tweet.full_text)["compound"],
+                "by_hand_result" : ""
             }
 
             filtered_tweet_array.append(tweet_json_object)
