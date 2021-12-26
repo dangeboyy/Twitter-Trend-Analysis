@@ -2,27 +2,27 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def print_vader_total(positive_vdr, negative_vdr, neutral_vdr):
+def print_analysis_total(positive, negative, neutral):
     print('-----------------------Vader-----------------------------------------------------')
-    print("Pozitif:" + positive_vdr)
-    print("Negatif:" + negative_vdr)
-    print("Neutral:" + neutral_vdr)
+    print("Pozitif:" + positive)
+    print("Negatif:" + negative)
+    print("Neutral:" + neutral)
     print("-----------------------------------------------------------------------------------")
 
 
-def print_polarity_result(polarity_vdr):
+def print_polarity_result(polarity):
     print("##########Vader###########")
-    if polarity_vdr > 0:
+    if polarity > 0:
         print('Positive')
-    elif polarity_vdr < 0:
+    elif polarity < 0:
         print('Negative')
-    elif polarity_vdr == 0:
+    elif polarity == 0:
         print('Neutral')
     print("#################################")
 
-def print_results(positive_vdr, negative_vdr, neutral_vdr,total_polarity_vdr):
-    print_vader_total(positive_vdr, negative_vdr, neutral_vdr)
-    print_polarity_result(total_polarity_vdr)
+def print_results(positive, negative, neutral,total_polarity):
+    print_analysis_total(positive, negative, neutral)
+    print_polarity_result(total_polarity)
 
 def pie_chart(positive, negative, neutral):
     y = np.array([positive, negative, neutral])
@@ -52,9 +52,9 @@ def bar_chart(positive, negative, neutral):
     plt.bar(labels, sentiment, color= ['Blue', 'Red', 'green'])
     plt.show()
 
-def create_charts(positive_vdr, negative_vdr, neutral_vdr):
-    pie_chart(positive_vdr, negative_vdr, neutral_vdr)
-    bar_chart(positive_vdr, negative_vdr, neutral_vdr)
+def create_charts(positive, negative, neutral):
+    pie_chart(positive, negative, neutral)
+    bar_chart(positive, negative, neutral)
 
 def create_tweet_json_object(tweet,vader_result):
     tweet_json_object = {
