@@ -7,17 +7,6 @@ import utility
 import analysis
 
 
-def add_to_same_array(full_array, tweets):
-    rt_count = 0
-    for tweet in tweets:
-        if "retweeted_status" in dir(tweet):
-            rt_count += 1
-
-        full_array.append(tweet)
-
-    return rt_count
-
-
 def traversingTrends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
         trend_name = tweeter_trends['trends'][i + 1]['name']
@@ -33,11 +22,8 @@ def traversingTrends(tweeter_trends):
 
         tweets = services.get_tweets(trend_name,30)
 
-        rt_count = add_to_same_array(full_array, tweets)
-
-        for tweet in full_array:
+        for tweet in tweets:
             print(tweet.full_text)
-
             tweet.full_text = tweet.full_text.replace(trend_name, "")
 
             tweet_text_polarity = analysis.get_text_polarity_english(tweet.full_text)
@@ -57,7 +43,7 @@ def traversingTrends(tweeter_trends):
         formated_negative = format(total_negative, '.2f')
         formated_neutral = format(total_neutral, '.2f')
         
-        utility.print_results(formated_positive, formated_negative, formated_neutral, total_polarity, full_array, rt_count)
+        utility.print_results(formated_positive, formated_negative, formated_neutral, total_polarity)
         utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
         full_array.clear()

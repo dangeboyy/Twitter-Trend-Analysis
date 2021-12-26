@@ -1,11 +1,7 @@
 # AUTHOR: İBRAHİM MERT EGE
-import requests
-import base64
 import tweepy
 
 tweet_search_url = "https://api.twitter.com/1.1/search/tweets.json"
-
-
 
 def authenticate_api():
     consumer_key = 'z9QiZqqYDtz2iuD6YbnuVo1NS'
@@ -29,6 +25,3 @@ def get_trends():
 def get_tweets(trend_name,tweet_count):
     tweets = tweepy.Cursor(authenticate_api().search_tweets, q=trend_name + " -RT", lang='en', tweet_mode="extended").items(tweet_count)
     return tweets
-
-
-

@@ -20,11 +20,9 @@ def print_polarity_result(polarity_vdr):
         print('Neutral')
     print("#################################")
 
-def print_results(positive_vdr, negative_vdr, neutral_vdr,total_polarity_vdr,full_array,rt_count):
+def print_results(positive_vdr, negative_vdr, neutral_vdr,total_polarity_vdr):
     print_vader_total(positive_vdr, negative_vdr, neutral_vdr)
     print_polarity_result(total_polarity_vdr)
-    print("full size: " + str(len(full_array)))
-    print("retweet size: " + str(rt_count))
 
 def pie_chart(positive, negative, neutral):
     y = np.array([positive, negative, neutral])
@@ -68,5 +66,5 @@ def create_tweet_json_object(tweet,vader_result):
         "vader_result" : vader_result,
         "by_hand_result" : ""
     }
-    
+
     return tweet_json_object
