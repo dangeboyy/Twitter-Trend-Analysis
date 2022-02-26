@@ -67,7 +67,7 @@ def traversing_turkish_trends(tweeter_trends):
         for tweet in tweets:
             print(tweet.full_text)
             
-            tweet_text_polarity = analysis.get_text_polarity(tweet.full_text.replace(trend_name, ""))
+            tweet_text_polarity = analysis.get_turkish_text_polarity(tweet.full_text.replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
             neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
