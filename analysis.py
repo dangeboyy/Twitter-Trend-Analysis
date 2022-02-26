@@ -1,5 +1,5 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from deneme import update_library_for_turkish
+from vader_turkish_test import update_library_for_turkish
 analyzer = SentimentIntensityAnalyzer()
 
 def update_trend_polarity_result(analysis_score):
