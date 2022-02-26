@@ -16,12 +16,20 @@ def authenticate_api():
     return api
 
 
-def get_trends():
-    api = authenticate_api()
+def get_english_trends(api):
     woeid = 23424977
     trends = api.get_place_trends(woeid)
     return trends
 
-def get_tweets(trend_name,tweet_count):
+def get_english_tweets(trend_name,tweet_count):
     tweets = tweepy.Cursor(authenticate_api().search_tweets, q=trend_name + " -RT", lang='en', tweet_mode="extended").items(tweet_count)
+    return tweets
+
+def get_turkish_trends(api):
+    woeid = 23424969
+    trends = api.get_place_trends(woeid)
+    return trends
+
+def get_turkish_tweets(trend_name,tweet_count):
+    tweets = tweepy.Cursor(authenticate_api().search_tweets, q=trend_name + " -RT", lang='tr', tweet_mode="extended").items(tweet_count)
     return tweets

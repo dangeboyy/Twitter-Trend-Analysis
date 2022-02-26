@@ -1,4 +1,5 @@
 # AUTHOR: İBRAHİM MERT EGE
+from curses.ascii import isalnum, isalpha
 import json
 
 import services
@@ -7,7 +8,31 @@ import utility
 import analysis
 
 
-def traversingTrends(tweeter_trends):
+def choose_country():
+    print("Choose the country you want to analise")
+    print("1) America Trend Analysis")
+    print("2) Turkey Trend Analysis")
+    print("0 to exit")
+
+    while(True):
+        choice_input = input()
+        
+        if isalpha(choice_input):
+            print("enter a number")
+            continue
+
+        if choice_input < 0 and choice_input > 2:
+            print("enter a number from 0 to 2")
+            continue
+
+        break
+
+    return choice_input
+
+
+
+
+def traversing_english_trends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
         trend_name = tweeter_trends['trends'][i + 1]['name']
         print("Trend Name: " + trend_name)
@@ -20,7 +45,7 @@ def traversingTrends(tweeter_trends):
         total_neutral = 0
         total_polarity = 0
 
-        tweets = services.get_tweets(trend_name,30)
+        tweets = services.get_english_tweets(trend_name,30)
 
         for tweet in tweets:
             print(tweet.full_text)
@@ -49,10 +74,63 @@ def traversingTrends(tweeter_trends):
         
         break
 
+# TODO parametre olarak en tr giricek
+def traversing_turkish_trends(tweeter_trends):
+    for i in range(len(tweeter_trends['trends'])):
+        trend_name = tweeter_trends['trends'][i + 1]['name']
+        print("Trend Name: " + trend_name)
 
-trend_data = services.get_trends()
-trend_json = json.dumps(trend_data, indent=4)
+        filtered_tweet_array = []
+        full_array = []
 
-fileIO.write_trends(trend_json)
+        total_positive = 0
+        total_negative = 0
+        total_neutral = 0
+        total_polarity = 0
 
-traversingTrends(trend_data[0])
+        tweets = services.get_turkish_tweets(trend_name,30)
+
+        for tweet in tweets:
+            print(tweet.full_text)
+            
+            tweet_text_polarity = analysis.get_text_polarity_english(tweet.full_text.replace(trend_name, ""))
+
+            total_polarity += tweet_text_polarity
+            neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
+            total_neutral += neut
+            total_positive += pos
+            total_negative += neg
+
+            tweet_json_object = utility.create_tweet_json_object(tweet, tweet_text_polarity)
+            filtered_tweet_array.append(tweet_json_object)
+
+        fileIO.append_to_JSON_file(filtered_tweet_array, trend_name)
+
+        formated_positive = format(total_positive, '.2f')
+        formated_negative = format(total_negative, '.2f')
+        formated_neutral = format(total_neutral, '.2f')
+        
+        utility.print_results(formated_positive, formated_negative, formated_neutral, total_polarity)
+        utility.create_charts(formated_positive, formated_negative, formated_neutral)
+
+        full_array.clear()
+    
+        break
+
+def write_trends(trend_data):
+    trend_json = json.dumps(trend_data, indent=4)
+    fileIO.write_trends(trend_json)
+
+def redirect_user():
+    api = services.authenticate_api()
+    choice_input = choose_country()
+    
+    # english = 1
+    if choice_input == 1:
+        trend_data = services.get_english_trends(api)
+        write_trends(trend_data)
+        traversing_english_trends(trend_data[0])
+    elif choice_input == 2:
+        trend_data = services.get_turkish_trends(api)
+        write_trends(trend_data)
+        traversing_turkish_trends(trend_data[0])
