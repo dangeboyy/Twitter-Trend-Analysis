@@ -24,12 +24,11 @@ def traversingTrends(tweeter_trends):
 
         for tweet in tweets:
             print(tweet.full_text)
-            tweet.full_text = tweet.full_text.replace(trend_name, "")
-
-            tweet_text_polarity = analysis.get_text_polarity_english(tweet.full_text)
+            
+            tweet_text_polarity = analysis.get_text_polarity_english(tweet.full_text.replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
-            neut, pos, neg = analysis.english_analysis(tweet.full_text)
+            neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
             total_neutral += neut
             total_positive += pos
             total_negative += neg
