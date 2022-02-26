@@ -1,5 +1,4 @@
 # AUTHOR: İBRAHİM MERT EGE
-from curses.ascii import isalnum, isalpha
 import json
 
 import services
@@ -15,9 +14,9 @@ def choose_country():
     print("0 to exit")
 
     while(True):
-        choice_input = input()
-        
-        if isalpha(choice_input):
+        try: 
+            choice_input = int(input())     
+        except:
             print("enter a number")
             continue
 
@@ -28,8 +27,6 @@ def choose_country():
         break
 
     return choice_input
-
-
 
 
 def traversing_english_trends(tweeter_trends):
@@ -134,3 +131,5 @@ def redirect_user():
         trend_data = services.get_turkish_trends(api)
         write_trends(trend_data)
         traversing_turkish_trends(trend_data[0])
+
+redirect_user()
