@@ -4,8 +4,8 @@ import numpy as np
 
 def print_analysis_total(positive, negative, neutral):
     print('-----------------------Vader-----------------------------------------------------')
-    print("Pozitif:" + positive)
-    print("Negatif:" + negative)
+    print("Positive:" + positive)
+    print("Negative:" + negative)
     print("Neutral:" + neutral)
     print("-----------------------------------------------------------------------------------")
 
@@ -68,3 +68,24 @@ def create_tweet_json_object(tweet,vader_result):
     }
 
     return tweet_json_object
+
+def choose_country():
+    print("Choose the country you want to analise")
+    print("1) America Trend Analysis")
+    print("2) Turkey Trend Analysis")
+    print("0 to exit")
+
+    while(True):
+        try: 
+            choice_input = int(input())     
+        except:
+            print("enter a number")
+            continue
+
+        if choice_input < 0 and choice_input > 2:
+            print("enter a number from 0 to 2")
+            continue
+
+        break
+
+    return choice_input

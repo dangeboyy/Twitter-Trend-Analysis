@@ -6,29 +6,6 @@ import fileIO
 import utility
 import analysis
 
-
-def choose_country():
-    print("Choose the country you want to analise")
-    print("1) America Trend Analysis")
-    print("2) Turkey Trend Analysis")
-    print("0 to exit")
-
-    while(True):
-        try: 
-            choice_input = int(input())     
-        except:
-            print("enter a number")
-            continue
-
-        if choice_input < 0 and choice_input > 2:
-            print("enter a number from 0 to 2")
-            continue
-
-        break
-
-    return choice_input
-
-
 def traversing_english_trends(tweeter_trends):
     for i in range(len(tweeter_trends['trends'])):
         trend_name = tweeter_trends['trends'][i + 1]['name']
@@ -47,7 +24,7 @@ def traversing_english_trends(tweeter_trends):
         for tweet in tweets:
             print(tweet.full_text)
             
-            tweet_text_polarity = analysis.get_text_polarity_english(tweet.full_text.replace(trend_name, ""))
+            tweet_text_polarity = analysis.get_text_polarity(tweet.full_text.replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
             neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
@@ -90,7 +67,7 @@ def traversing_turkish_trends(tweeter_trends):
         for tweet in tweets:
             print(tweet.full_text)
             
-            tweet_text_polarity = analysis.get_text_polarity_english(tweet.full_text.replace(trend_name, ""))
+            tweet_text_polarity = analysis.get_text_polarity(tweet.full_text.replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
             neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
@@ -118,11 +95,11 @@ def write_trends(trend_data):
     trend_json = json.dumps(trend_data, indent=4)
     fileIO.write_trends(trend_json)
 
-def redirect_user():
+def initialize():
     api = services.authenticate_api()
-    choice_input = choose_country()
+    choice_input = utility.choose_country()
     
-    # english = 1
+    # english = 1 turkish = 2
     if choice_input == 1:
         trend_data = services.get_english_trends(api)
         write_trends(trend_data)
@@ -132,4 +109,4 @@ def redirect_user():
         write_trends(trend_data)
         traversing_turkish_trends(trend_data[0])
 
-redirect_user()
+initialize()

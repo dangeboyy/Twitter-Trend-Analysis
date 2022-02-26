@@ -13,5 +13,5 @@ def update_trend_polarity_result(analysis_score):
         print("Negative for Vader")
         return 0, 0, 1
 
-def get_text_polarity_english(text):
+def get_text_polarity(text):
     return (analyzer.polarity_scores(text))["compound"]
