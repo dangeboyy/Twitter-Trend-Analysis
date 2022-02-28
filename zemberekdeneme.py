@@ -1,5 +1,4 @@
-import time
-import logging
+import string
 
 from zemberek import (
     TurkishSpellChecker,
@@ -9,7 +8,6 @@ from zemberek import (
     TurkishTokenizer
 )
 
-logger = logging.getLogger(__name__)
 
 examples = ["Yrn okua gidicem",
             "Tmm, yarin havuza giricem ve aksama kadar yaticam :)",
@@ -71,18 +69,29 @@ morphology = TurkishMorphology.create_with_defaults()
 
 # SINGLE WORD MORPHOLOGICAL ANALYSIS
 
-results = morphology.analyze("iştahsız")
-for result in results:
 
-    print(result)
+sentence = 'amin'
+split_sentence = sentence.translate(str.maketrans('', '', string.punctuation)).split()
 
-    for i in range(len(result.get_morphemes())):
-        print(result.get_morphemes()[i])
-        if str(result.get_morphemes()[i]) == 'Without:Without':
-            print('without var')
+word_to_be_analised = ""
+for word in split_sentence:
+    results = morphology.analyze(word[0])
+    for result in results:
+        print(result)
+        contains_without = False
+        for i in range(len(result.get_morphemes())):
+            if str(result.get_morphemes()[i]) == 'Without:Without' or str(result.get_morphemes()[i]) == 'Negative:Neg':
+                contains_without = True
+                break
 
+        if contains_without:
+            word_to_be_analised += word[0] + " "
+        else:
+            word_to_be_analised += result.item.lemma + " "
 
-print("\n")
+        break
+    
+print(word_to_be_analised.rstrip())
 
 # # TOKENIZATION
 # tokenizer = TurkishTokenizer.DEFAULT

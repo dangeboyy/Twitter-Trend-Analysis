@@ -50,6 +50,7 @@ def traversing_english_trends(tweeter_trends):
 
 # TODO parametre olarak en tr giricek
 def traversing_turkish_trends(tweeter_trends):
+    morphology = analysis.init_morphology_analiser()
     for i in range(len(tweeter_trends['trends'])):
         trend_name = tweeter_trends['trends'][i + 1]['name']
         print("Trend Name: " + trend_name)
@@ -67,7 +68,7 @@ def traversing_turkish_trends(tweeter_trends):
         for tweet in tweets:
             print(tweet.full_text)
             
-            tweet_text_polarity = analysis.get_turkish_text_polarity(tweet.full_text.replace(trend_name, ""))
+            tweet_text_polarity = analysis.get_turkish_text_polarity(tweet.full_text.replace(trend_name, ""), morphology)
 
             total_polarity += tweet_text_polarity
             neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
