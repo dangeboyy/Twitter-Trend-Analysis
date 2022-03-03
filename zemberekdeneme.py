@@ -1,5 +1,6 @@
 import string
-
+import time
+import pickle
 from zemberek import (
     TurkishSpellChecker,
     TurkishSentenceNormalizer,
@@ -19,32 +20,44 @@ examples = ["Yrn okua gidicem",
             "email adresim zemberek_python@loodos.com",
             "Kredi başvrusu yapmk istiyrum.",
             "Bankanizin hesp blgilerini ogrenmek istyorum."]
+def remove_whitespace(x):
+    try:
+        x = " ".join(x.split())
+    except:
+        pass
+    return x
 
 morphology = TurkishMorphology.create_with_defaults()
 
-# # SENTENCE NORMALIZATION
-# start = time.time()
-#normalizer = TurkishSentenceNormalizer(morphology)
-# logger.info(f"Normalization instance created in: {time.time() - start} s")
+# SENTENCE NORMALIZATION
+
+normalizer = TurkishSentenceNormalizer(morphology)
+
+text = "Tmm, yarin havuza giricem ve #aksama kadar yaticam arabaa arabaa aaraba aaraba     ardaba  asraba    aradba:)"
+normalized_sentence = normalizer.normalize(text)
+start = time.time()
+normalized_sentence = remove_whitespace(normalized_sentence)
+split_normalized_sentence = normalized_sentence.split()
+for word in split_normalized_sentence:
+    if word.startswith('#'):
+        split_normalized_sentence.remove(word)
+
+final_sentence = " ".join(split_normalized_sentence)
+print(f"Normalization instance created in: {time.time() - start} s")
+print(final_sentence)
+
+
 
 # start = time.time()
 # for example in examples:
 #     print(example)
 #     print(normalizer.normalize(example), "\n")
-# logger.info(f"Sentences normalized in: {time.time() - start} s")
+# print(f"Sentences normalized in: {time.time() - start} s")
 
-# start = time.time()
-#sc = TurkishSpellChecker(morphology)
-# logger.info(f"Spell checker instance created in: {time.time() - start} s")
-
-
-# # SPELLING SUGGESTION
-# li = ["okuyablirim", "tartısıyor", "Ankar'ada", "knlıca", "yapablrim", "kıredi", "geldm", "geliyom", "aldm", "asln"]
-# start = time.time()
-# for word in li:
-#     print(word + " = " + ' '.join(sc.suggest_for_word(word)))
-# logger.info(f"Spells checked in: {time.time() - start} s")
-
+# filename = "morphology"
+# outfile = open(filename, "wb")
+# pickle.dump(morphology,outfile)
+# outfile.close()
 
 # # SENTENCE BOUNDARY DETECTION
 # start = time.time()
@@ -70,28 +83,28 @@ morphology = TurkishMorphology.create_with_defaults()
 # SINGLE WORD MORPHOLOGICAL ANALYSIS
 
 
-sentence = 'amin'
-split_sentence = sentence.translate(str.maketrans('', '', string.punctuation)).split()
+# sentence = 'amin'
+# split_sentence = sentence.translate(str.maketrans('', '', string.punctuation)).split()
 
-word_to_be_analised = ""
-for word in split_sentence:
-    results = morphology.analyze(word[0])
-    for result in results:
-        print(result)
-        contains_without = False
-        for i in range(len(result.get_morphemes())):
-            if str(result.get_morphemes()[i]) == 'Without:Without' or str(result.get_morphemes()[i]) == 'Negative:Neg':
-                contains_without = True
-                break
+# word_to_be_analised = ""
+# for word in split_sentence:
+#     results = morphology.analyze(word[0])
+#     for result in results:
+#         print(result)
+#         contains_without = False
+#         for i in range(len(result.get_morphemes())):
+#             if str(result.get_morphemes()[i]) == 'Without:Without' or str(result.get_morphemes()[i]) == 'Negative:Neg':
+#                 contains_without = True
+#                 break
 
-        if contains_without:
-            word_to_be_analised += word[0] + " "
-        else:
-            word_to_be_analised += result.item.lemma + " "
+#         if contains_without:
+#             word_to_be_analised += word[0] + " "
+#         else:
+#             word_to_be_analised += result.item.lemma + " "
 
-        break
+#         break
     
-print(word_to_be_analised.rstrip())
+# print(word_to_be_analised.rstrip())
 
 # # TOKENIZATION
 # tokenizer = TurkishTokenizer.DEFAULT

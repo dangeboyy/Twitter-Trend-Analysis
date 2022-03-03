@@ -1,13 +1,13 @@
+from encodings import normalize_encoding
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from vader_turkish_test import update_library_for_turkish
-from zemberek import TurkishMorphology
+from zemberek import TurkishMorphology, TurkishSentenceNormalizer
 import string
 
 analyzer = SentimentIntensityAnalyzer()
 
 
 def update_trend_polarity_result(analysis_score): 
-    if analysis_score > 0.1:
+    if analysis_score > 0.05:
         print("Positive for Vader")
         return 0, 1, 0
     elif analysis_score < -0.05:
@@ -20,21 +20,43 @@ def update_trend_polarity_result(analysis_score):
 def get_text_polarity(text):
     return (analyzer.polarity_scores(text))["compound"]
 
-def get_turkish_text_polarity(text, morphology):
-    turkish_analyzer = update_library_for_turkish()
-    stemmed_sentence = stem_turkish_words(text, morphology)
+def get_turkish_text_polarity(text, turkish_analyzer, morphology, normalizer):
+    normalized_sentence = normalize_sentence(text,normalizer)
+    stemmed_sentence = stem_turkish_words(normalized_sentence, morphology)
+    print(stemmed_sentence)
     polarity_score = (turkish_analyzer.polarity_scores(stemmed_sentence))["compound"]
     print("----------- " , turkish_analyzer.polarity_scores(stemmed_sentence) , " -----------")
     return polarity_score
 
+def normalize_sentence(text, normalizer):
+    normalized_sentence = normalizer.normalize(text)
+    normalized_sentence = remove_whitespace(normalized_sentence)
+    split_normalized_sentence = normalized_sentence.split()
+    for word in split_normalized_sentence:
+        if word.startswith('#'):
+            split_normalized_sentence.remove(word)
+    
+    final_sentence = " ".join(split_normalized_sentence)
+    return final_sentence
+
+def remove_whitespace(x):
+    try:
+        x = " ".join(x.split())
+    except:
+        pass
+    return x
+
 def init_morphology_analiser():
     return TurkishMorphology.create_with_defaults()
+
+def init_normalizer(morphology):
+    return TurkishSentenceNormalizer(morphology)
 
 def stem_turkish_words(sentence, morphology):
     split_sentence = sentence.translate(str.maketrans('', '', string.punctuation)).split()
     word_to_be_analised = ""
     for word in split_sentence:
-        results = morphology.analyze(word[0])
+        results = morphology.analyze(word)
         for result in results:
             contains_without = False
             for i in range(len(result.get_morphemes())):
@@ -43,7 +65,7 @@ def stem_turkish_words(sentence, morphology):
                     break
 
             if contains_without:
-                word_to_be_analised += word[0] + " "
+                word_to_be_analised += word + " "
             else:
                 word_to_be_analised += result.item.lemma + " "
 
