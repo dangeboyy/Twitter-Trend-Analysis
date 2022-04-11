@@ -1,6 +1,6 @@
-from encodings import normalize_encoding
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from zemberek import TurkishMorphology, TurkishSentenceNormalizer
+from utility import remove_stop_words
 import string
 
 analyzer = SentimentIntensityAnalyzer()
@@ -22,8 +22,9 @@ def get_text_polarity(text):
 
 def get_turkish_text_polarity(text, turkish_analyzer, morphology, normalizer):
     normalized_sentence = normalize_sentence(text,normalizer)
-    stemmed_sentence = stem_turkish_words(normalized_sentence, morphology)
-    print(stemmed_sentence)
+    no_stop_words_sentence = remove_stop_words(normalized_sentence)
+    stemmed_sentence = stem_turkish_words(no_stop_words_sentence, morphology)
+    print(text + '==============>' + stemmed_sentence)
     polarity_score = (turkish_analyzer.polarity_scores(stemmed_sentence))["compound"]
     print("----------- " , turkish_analyzer.polarity_scores(stemmed_sentence) , " -----------")
     return polarity_score
@@ -64,6 +65,7 @@ def stem_turkish_words(sentence, morphology):
                     contains_without = True
                     break
 
+            # eğer sız siz varsa istemsiz şeklinde alıyor. Yoksa normal bir şekilde stemmliyoruz
             if contains_without:
                 word_to_be_analised += word + " "
             else:

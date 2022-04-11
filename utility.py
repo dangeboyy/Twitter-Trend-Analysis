@@ -1,5 +1,7 @@
+from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
+import fileIO
 
 
 def print_analysis_total(positive, negative, neutral):
@@ -89,3 +91,16 @@ def choose_country():
         break
 
     return choice_input
+
+def remove_stop_words(sentence):
+    stop_words = fileIO.read_stop_words()
+    tmp_arr = sentence.split(" ")
+    sent_arr = sentence.split(" ")
+    result = []
+
+    for word in tmp_arr:
+        if word in stop_words:
+            sent_arr.remove(word)
+
+    result.append(" ".join(sent_arr))
+    return " ".join(result)

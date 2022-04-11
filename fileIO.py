@@ -18,10 +18,8 @@ def append_to_JSON_file(filtered_array, trend_name):
         newfile.write(json_search_object)
 
 
-def read_stop_words(stop_file_path):
-    """load stop words """
-
-    with open(stop_file_path, 'r', encoding="utf-8") as f:
+def read_stop_words():
+    with open("stop_words.txt", 'r', encoding="utf-8") as f:
         stopwords = f.readlines()
         stop_set = set(m.strip() for m in stopwords)
         return list(frozenset(stop_set))
