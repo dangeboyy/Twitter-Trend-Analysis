@@ -1,9 +1,12 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import pandas as pd
 
+import fileIO
+
+
 def update_library_for_turkish():
     analyzer = SentimentIntensityAnalyzer()
-    tr_library=pd.read_excel("STN.xlsx",dtype=str)
+    tr_library=fileIO.read_turkish_glossary()
 
     words_to_add = dict()
 

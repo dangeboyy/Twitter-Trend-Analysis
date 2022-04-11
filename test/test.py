@@ -1,18 +1,31 @@
-import numpy as np
-import matplotlib.pyplot as plt
+import fileIO
 
-positive = [20,43,76,123,9,4,75,65,16,56]
-negative = [12,45,23,43,65,23,87,23,65,45]
-neutral = [23,43,54,23,34,12,54,65,34,65]
+stop_words = fileIO.read_stop_words("../stop_words.txt")
 
-data = [positive,
-negative,
-neutral]
 
-X = np.arange(10)
-fig = plt.figure()
-ax = fig.add_axes([0,0,1,1])
-ax.bar(X + 0.00, data[0], color = 'b', width = 0.25)
-ax.bar(X + 0.25, data[1], color = 'g', width = 0.25)
-ax.bar(X + 0.50, data[2], color = 'r', width = 0.25)
-plt.show()
+def remove_stop_words(sentence):
+    results = []
+    tmp_arr = sentence.split(" ")
+    sent_arr = sentence.split(" ")
+
+    for word in tmp_arr:
+        if word in stop_words:
+            print(word)
+            sent_arr.remove(word)
+    results.append(" ".join(sent_arr))
+
+    # for stop_word in stop_words:
+    #    split_arr=sentence.split(" ")
+    #    if stop_word in split_arr:
+    #        sentence.remove(stop_word)
+    # results.append(" ".join(sentence))
+
+    return results
+
+
+sent = "yardım etmek çok güzel bir şey".split(" ")
+
+for i in range(len(sent) - 1):
+    if (sent[i] + " " + sent[i + 1]) in ["yardım etmek"]:
+        print("ege")
+

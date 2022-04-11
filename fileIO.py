@@ -1,7 +1,8 @@
-
 import json
 from os import path
 import os
+import pandas as pd
+
 
 def write_trends(trend_json):
     with open("trends.json", "w") as outfile:
@@ -15,3 +16,16 @@ def append_to_JSON_file(filtered_array, trend_name):
     json_search_object = json.dumps(filtered_array, indent=4)
     with open("./unfilteredtweets/" + trend_name + ".json", "a+") as newfile:
         newfile.write(json_search_object)
+
+
+def read_stop_words(stop_file_path):
+    """load stop words """
+
+    with open(stop_file_path, 'r', encoding="utf-8") as f:
+        stopwords = f.readlines()
+        stop_set = set(m.strip() for m in stopwords)
+        return list(frozenset(stop_set))
+
+
+def read_turkish_glossary():
+    return pd.read_excel("STN.xlsx",dtype=str)

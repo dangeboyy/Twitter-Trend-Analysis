@@ -1,6 +1,7 @@
 import string
 import time
 import pickle
+
 from zemberek import (
     TurkishSpellChecker,
     TurkishSentenceNormalizer,
@@ -8,7 +9,6 @@ from zemberek import (
     TurkishMorphology,
     TurkishTokenizer
 )
-
 
 examples = ["Yrn okua gidicem",
             "Tmm, yarin havuza giricem ve aksama kadar yaticam :)",
@@ -20,12 +20,15 @@ examples = ["Yrn okua gidicem",
             "email adresim zemberek_python@loodos.com",
             "Kredi başvrusu yapmk istiyrum.",
             "Bankanizin hesp blgilerini ogrenmek istyorum."]
+
+
 def remove_whitespace(x):
     try:
         x = " ".join(x.split())
     except:
         pass
     return x
+
 
 morphology = TurkishMorphology.create_with_defaults()
 
@@ -45,8 +48,6 @@ for word in split_normalized_sentence:
 final_sentence = " ".join(split_normalized_sentence)
 print(f"Normalization instance created in: {time.time() - start} s")
 print(final_sentence)
-
-
 
 # start = time.time()
 # for example in examples:
@@ -103,7 +104,7 @@ print(final_sentence)
 #             word_to_be_analised += result.item.lemma + " "
 
 #         break
-    
+
 # print(word_to_be_analised.rstrip())
 
 # # TOKENIZATION
