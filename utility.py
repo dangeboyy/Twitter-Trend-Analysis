@@ -1,4 +1,3 @@
-from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
 import fileIO
@@ -65,8 +64,7 @@ def create_tweet_json_object(tweet,vader_result):
         "retweet_count": tweet.retweet_count,
         "favorite_count": tweet.favorite_count,
         "full_text": tweet.full_text,
-        "vader_result" : vader_result,
-        "by_hand_result" : ""
+        "vader_result" : vader_result
     }
 
     return tweet_json_object

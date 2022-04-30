@@ -2,6 +2,7 @@ import json
 from os import path
 import os
 import pandas as pd
+from database.dbCon import insertIntoDB 
 
 
 def write_trends(trend_json):
@@ -14,6 +15,7 @@ def append_to_JSON_file(filtered_array, trend_name):
         os.mkdir(os.getcwd() + "/unfilteredtweets")
 
     json_search_object = json.dumps(filtered_array, indent=4)
+    insertIntoDB(filtered_array)
     with open("./unfilteredtweets/" + trend_name + ".json", "a+") as newfile:
         newfile.write(json_search_object)
 
