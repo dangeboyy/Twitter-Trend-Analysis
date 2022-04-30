@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import fileIO
-
+import datetime
 
 def print_analysis_total(positive, negative, neutral):
     print('-----------------------Vader-----------------------------------------------------')
@@ -57,17 +57,30 @@ def create_charts(positive, negative, neutral):
     pie_chart(positive, negative, neutral)
     bar_chart(positive, negative, neutral)
 
-def create_tweet_json_object(tweet,vader_result):
+def create_tweet_json_object(tweet, vader_result, trend_name):
     tweet_json_object = {
+        "created_at" : tweet.created_at,  
         "id": tweet.id,
         "lang": tweet.lang,
         "retweet_count": tweet.retweet_count,
         "favorite_count": tweet.favorite_count,
         "full_text": tweet.full_text,
-        "vader_result" : vader_result
+        "vader_result" : vader_result,
+        "trend_name": trend_name, 
     }
 
     return tweet_json_object
+
+def create_trend_json_object(trend, pos_result, neg_result, neu_result):
+    trend_json_object = {
+        "name": trend.name,
+        "tweet_volume": trend.tweet_volume,
+        "pos_result" : pos_result,
+        "neg_result" : neg_result,
+        "neu_result" : neu_result
+    }
+
+    return trend_json_object
 
 def choose_country():
     print("Choose the country you want to analise")

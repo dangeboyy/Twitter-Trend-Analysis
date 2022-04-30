@@ -3,8 +3,12 @@ client = MongoClient("mongodb+srv://dbAdmin:Zombi123@cluster0.xv6ij.mongodb.net/
 db=client.data_analysis
 
 tweets = db.tweets
+trends = db.trends
 
-def insertIntoDB(tweet_list):
+def insert_tweets(tweet_list):
     tweets.insert_many(tweet_list)
+
+def insert_trends(trend_list):
+    trends.insert_many(trend_list)
 
 #db.collection.ensureIndex( { record_id:1 }, { unique:true, dropDups:true } )
