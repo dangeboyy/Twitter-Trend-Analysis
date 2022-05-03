@@ -57,9 +57,11 @@ def create_charts(positive, negative, neutral):
     pie_chart(positive, negative, neutral)
     bar_chart(positive, negative, neutral)
 
+
+#datetime.datetime.strptime(tweet.created_at, "%a %b %d %X %z %Y")
 def create_tweet_json_object(tweet, vader_result, trend_name):
     tweet_json_object = {
-        "created_at" : tweet.created_at,  
+        "created_at" : tweet.created_at.strftime("%a %b %d %X %z %Y"),  
         "id": tweet.id,
         "lang": tweet.lang,
         "retweet_count": tweet.retweet_count,
@@ -72,9 +74,10 @@ def create_tweet_json_object(tweet, vader_result, trend_name):
     return tweet_json_object
 
 def create_trend_json_object(trend, pos_result, neg_result, neu_result):
+    print(trend)
     trend_json_object = {
-        "name": trend.name,
-        "tweet_volume": trend.tweet_volume,
+        "name": trend['name'],
+        "tweet_volume": trend['tweet_volume'],
         "pos_result" : pos_result,
         "neg_result" : neg_result,
         "neu_result" : neu_result
