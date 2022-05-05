@@ -2,7 +2,7 @@ import json
 from os import path
 import os
 import pandas as pd
-from database.dbCon import insert_tweets 
+from dbCon import insert_tweets 
 
 
 def write_trends(trend_json):

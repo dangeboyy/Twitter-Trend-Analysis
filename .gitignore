@@ -6,3 +6,5 @@ trends.json
 test/
 .idea/
 STN.xlsx
+.env
+__pycache__

@@ -5,7 +5,7 @@ import fileIO
 import utility
 import analysis
 from vader_turkish_test import update_library_for_turkish
-from database.dbCon import insert_trends
+from dbCon import insert_trends
 
 def traversing_english_trends(tweeter_trends):
     trend_array = list()
