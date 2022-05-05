@@ -49,9 +49,9 @@ def traversing_english_trends(tweeter_trends):
         full_array.clear()
         
         
-        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i+1],formated_positive,formated_negative,formated_neutral)
+        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i+1],total_positive,total_negative,total_neutral)
         trend_array.append(trend_json_object)
-        insert_trends(trend_array)
+
         break
     insert_trends(trend_array)
     
