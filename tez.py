@@ -44,7 +44,7 @@ def traversing_english_trends(tweeter_trends):
         formated_neutral = format(total_neutral, '.2f')
         
         utility.print_results(formated_positive, formated_negative, formated_neutral, total_polarity)
-        utility.create_charts(formated_positive, formated_negative, formated_neutral)
+        #utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
         full_array.clear()
         
