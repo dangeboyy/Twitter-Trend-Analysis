@@ -95,7 +95,7 @@ def traversing_turkish_trends(tweeter_trends):
         formated_neutral = format(total_neutral, '.2f')
         
         utility.print_results(formated_positive, formated_negative, formated_neutral, total_polarity)
-        utility.create_charts(formated_positive, formated_negative, formated_neutral)
+        #utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
         full_array.clear()
         break
@@ -108,8 +108,9 @@ def write_trends(trend_data):
 
 def initialize():
     api = services.authenticate_api()
-    choice_input = utility.choose_country()
-    
+    #choice_input = utility.choose_country()
+    choice_input = 1
+
     # english = 1 turkish = 2
     if choice_input == 1:
         trend_data = services.get_english_trends(api)
