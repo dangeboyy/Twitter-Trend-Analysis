@@ -74,7 +74,6 @@ def create_tweet_json_object(tweet, vader_result, trend_name):
     return tweet_json_object
 
 def create_trend_json_object(trend, pos_result, neg_result, neu_result):
-    print(trend)
     trend_json_object = {
         "name": trend['name'],
         "tweet_volume": trend['tweet_volume'],
