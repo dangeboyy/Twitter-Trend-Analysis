@@ -5,8 +5,10 @@ import fileIO
 import utility
 import analysis
 from vader_turkish_test import update_library_for_turkish
+from dbCon import insert_trends
 
 def traversing_english_trends(tweeter_trends):
+    trend_array = list()
     for i in range(len(tweeter_trends['trends'])):
         trend_name = tweeter_trends['trends'][i + 1]['name']
         print("Trend Name: " + trend_name)
@@ -32,7 +34,7 @@ def traversing_english_trends(tweeter_trends):
             total_positive += pos
             total_negative += neg
 
-            tweet_json_object = utility.create_tweet_json_object(tweet, tweet_text_polarity)
+            tweet_json_object = utility.create_tweet_json_object(tweet, tweet_text_polarity, trend_name)
             filtered_tweet_array.append(tweet_json_object)
 
         fileIO.append_to_JSON_file(filtered_tweet_array, trend_name)
@@ -42,11 +44,17 @@ def traversing_english_trends(tweeter_trends):
         formated_neutral = format(total_neutral, '.2f')
         
         utility.print_results(formated_positive, formated_negative, formated_neutral, total_polarity)
-        utility.create_charts(formated_positive, formated_negative, formated_neutral)
+        #utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
         full_array.clear()
         
+        
+        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i+1],formated_positive,formated_negative,formated_neutral)
+        trend_array.append(trend_json_object)
+        insert_trends(trend_array)
         break
+    insert_trends(trend_array)
+    
 
 # TODO parametre olarak en tr giricek
 def traversing_turkish_trends(tweeter_trends):
@@ -90,8 +98,9 @@ def traversing_turkish_trends(tweeter_trends):
         utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
         full_array.clear()
-    
         break
+    
+    
 
 def write_trends(trend_data):
     trend_json = json.dumps(trend_data, indent=4)
