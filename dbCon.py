@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import copy
 
 load_dotenv()
 
@@ -12,7 +13,21 @@ tweets = db.tweets
 trends = db.trends
 
 
-# tweets.ensure_index( { id:1 }, { unique : True, dropDups : True } )
+
+def find_unique_tweets(tweet_list):
+    ids = []
+    for tweet in tweet_list:
+        tweet.unique = False
+        ids.append(tweet.id)
+
+    same_tweets_not_updated = tweets.find({"id" : { "$in" : ids }})
+    
+    for i in range(len(tweet_list)):
+        for j in range(len(same_tweets_not_updated)):
+            if tweet_list[i].id != same_tweets_not_updated[j].id:
+                tweet_list[i].unique = True
+    
+
 
 def insert_tweets(tweet_list):
     tweets.insert_many(tweet_list)
@@ -29,7 +44,7 @@ def insert_tweets(tweet_list):
                                    upsert=True)
 
 
-def insert_trends(trend_list):
+def insert_trends(trend_list,same_tweets):
     for trend in trend_list:
         trends.find_one_and_update({"name": trend['name']},
                                    {"$set": {

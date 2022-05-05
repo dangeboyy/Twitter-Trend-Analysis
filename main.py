@@ -1,11 +1,12 @@
 # AUTHOR: İBRAHİM MERT EGE
+from curses import has_key
 import json
 import services
 import fileIO
 import utility
 import analysis
 from vader_turkish_test import update_library_for_turkish
-from dbCon import insert_trends
+from dbCon import insert_trends, insert_tweets, find_unique_tweets
 
 def traversing_english_trends(tweeter_trends):
     trend_array = list()
@@ -22,22 +23,24 @@ def traversing_english_trends(tweeter_trends):
         total_polarity = 0
 
         tweets = services.get_english_tweets(trend_name,30)
-
-        for tweet in tweets:
+        unique_tweets = find_unique_tweets(tweets)
+        for tweet in unique_tweets:
             print(tweet.full_text)
             
             tweet_text_polarity = analysis.get_text_polarity(tweet.full_text.replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
-            neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
-            total_neutral += neut
-            total_positive += pos
-            total_negative += neg
+            if tweet.unique:
+                neut, pos, neg = analysis.update_trend_polarity_result(tweet_text_polarity)
+                total_neutral += neut
+                total_positive += pos
+                total_negative += neg
 
             tweet_json_object = utility.create_tweet_json_object(tweet, tweet_text_polarity, trend_name)
             filtered_tweet_array.append(tweet_json_object)
 
         fileIO.append_to_JSON_file(filtered_tweet_array, trend_name)
+        insert_tweets(tweets)
 
         formated_positive = format(total_positive, '.2f')
         formated_negative = format(total_negative, '.2f')
