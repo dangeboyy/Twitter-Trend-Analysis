@@ -17,15 +17,16 @@ trends = db.trends
 def find_unique_tweets(tweet_list):
     ids = []
     for tweet in tweet_list:
-        tweet['unique'] = False
+        tweet['unique'] = True
         ids.append(tweet['id'])
 
     same_tweets_not_updated = tweets.find({"id" : { "$in" : ids }})
     
     for tweet in tweet_list:
         for same_tweet in same_tweets_not_updated:
-            if tweet_list['id'] != same_tweet.id:
-                tweet_list['unique'] = True
+            if tweet['id'] == same_tweet['id']:
+                tweet['unique'] = False
+                break
     
 
 
@@ -44,7 +45,7 @@ def insert_tweets(tweet_list):
                                    upsert=True)
 
 
-def insert_trends(trend_list,same_tweets):
+def insert_trends(trend_list):
     for trend in trend_list:
         trends.find_one_and_update({"name": trend['name']},
                                    {"$set": {

@@ -3,11 +3,12 @@ import numpy as np
 import fileIO
 import datetime
 
+
 def print_analysis_total(positive, negative, neutral):
     print('-----------------------Vader-----------------------------------------------------')
-    print("Positive:" + positive)
-    print("Negative:" + negative)
-    print("Neutral:" + neutral)
+    print("Positive:", positive)
+    print("Negative:", negative)
+    print("Neutral:", neutral)
     print("-----------------------------------------------------------------------------------")
 
 
@@ -21,9 +22,11 @@ def print_polarity_result(polarity):
         print('Neutral')
     print("#################################")
 
-def print_results(positive, negative, neutral,total_polarity):
+
+def print_results(positive, negative, neutral, total_polarity):
     print_analysis_total(positive, negative, neutral)
     print_polarity_result(total_polarity)
+
 
 def pie_chart(positive, negative, neutral):
     y = np.array([positive, negative, neutral])
@@ -50,56 +53,60 @@ def bar_chart(positive, negative, neutral):
 
     ax.bar_label(rects, padding=3)
 
-    plt.bar(labels, sentiment, color= ['Blue', 'Red', 'green'])
+    plt.bar(labels, sentiment, color=['Blue', 'Red', 'green'])
     plt.show()
+
 
 def create_charts(positive, negative, neutral):
     pie_chart(positive, negative, neutral)
     bar_chart(positive, negative, neutral)
 
 
-#datetime.datetime.strptime(tweet.created_at, "%a %b %d %X %z %Y")
+# datetime.datetime.strptime(tweet.created_at, "%a %b %d %X %z %Y")
 def create_tweet_json_object(tweet, vader_result, trend_name):
     tweet_json_object = {
-        "created_at" : tweet.created_at.strftime("%a %b %d %X %z %Y"),  
+        "created_at": tweet.created_at.strftime("%a %b %d %X %z %Y"),
         "id": tweet.id,
         "lang": tweet.lang,
         "retweet_count": tweet.retweet_count,
         "favorite_count": tweet.favorite_count,
         "full_text": tweet.full_text,
-        "vader_result" : vader_result,
-        "trend_name": trend_name, 
+        "vader_result": vader_result,
+        "trend_name": trend_name,
     }
 
     return tweet_json_object
+
 
 def create_tweet_json_array(tweets):
     json_tweets = []
     for tweet in tweets:
         tweet_json_object = {
-            "created_at" : tweet.created_at.strftime("%a %b %d %X %z %Y"),  
+            "created_at": tweet.created_at.strftime("%a %b %d %X %z %Y"),
             "id": tweet.id,
             "lang": tweet.lang,
             "retweet_count": tweet.retweet_count,
             "favorite_count": tweet.favorite_count,
             "full_text": tweet.full_text,
-            "vader_result" : "",
-            "trend_name": "", 
+            "vader_result": "",
+            "trend_name": "",
         }
         json_tweets.append(tweet_json_object)
 
     return json_tweets
 
+
 def create_trend_json_object(trend, pos_result, neg_result, neu_result):
     trend_json_object = {
         "name": trend['name'],
         "tweet_volume": trend['tweet_volume'],
-        "pos_result" : pos_result,
-        "neg_result" : neg_result,
-        "neu_result" : neu_result
+        "pos_result": pos_result,
+        "neg_result": neg_result,
+        "neu_result": neu_result
     }
 
     return trend_json_object
+
 
 def choose_country():
     print("Choose the country you want to analise")
@@ -107,9 +114,9 @@ def choose_country():
     print("2) Turkey Trend Analysis")
     print("0 to exit")
 
-    while(True):
-        try: 
-            choice_input = int(input())     
+    while (True):
+        try:
+            choice_input = int(input())
         except:
             print("enter a number")
             continue
@@ -121,6 +128,7 @@ def choose_country():
         break
 
     return choice_input
+
 
 def remove_stop_words(sentence):
     stop_words = fileIO.read_stop_words()
