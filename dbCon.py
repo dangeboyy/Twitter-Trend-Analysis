@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
-import copy
+import json
 
 load_dotenv()
 
@@ -17,15 +17,15 @@ trends = db.trends
 def find_unique_tweets(tweet_list):
     ids = []
     for tweet in tweet_list:
-        tweet.unique = False
-        ids.append(tweet.id)
+        tweet['unique'] = False
+        ids.append(tweet['id'])
 
     same_tweets_not_updated = tweets.find({"id" : { "$in" : ids }})
     
-    for i in range(len(tweet_list)):
-        for j in range(len(same_tweets_not_updated)):
-            if tweet_list[i].id != same_tweets_not_updated[j].id:
-                tweet_list[i].unique = True
+    for tweet in tweet_list:
+        for same_tweet in same_tweets_not_updated:
+            if tweet_list['id'] != same_tweet.id:
+                tweet_list['unique'] = True
     
 
 

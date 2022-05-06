@@ -1,5 +1,4 @@
 # AUTHOR: İBRAHİM MERT EGE
-from curses import has_key
 import json
 import services
 import fileIO
@@ -23,8 +22,11 @@ def traversing_english_trends(tweeter_trends):
         total_polarity = 0
 
         tweets = services.get_english_tweets(trend_name,30)
-        unique_tweets = find_unique_tweets(tweets)
-        for tweet in unique_tweets:
+        
+        json_tweets = utility.create_tweet_json_array(tweets)
+        
+        find_unique_tweets(json_tweets)
+        for tweet in json_tweets:
             print(tweet.full_text)
             
             tweet_text_polarity = analysis.get_text_polarity(tweet.full_text.replace(trend_name, ""))

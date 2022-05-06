@@ -73,6 +73,23 @@ def create_tweet_json_object(tweet, vader_result, trend_name):
 
     return tweet_json_object
 
+def create_tweet_json_array(tweets):
+    json_tweets = []
+    for tweet in tweets:
+        tweet_json_object = {
+            "created_at" : tweet.created_at.strftime("%a %b %d %X %z %Y"),  
+            "id": tweet.id,
+            "lang": tweet.lang,
+            "retweet_count": tweet.retweet_count,
+            "favorite_count": tweet.favorite_count,
+            "full_text": tweet.full_text,
+            "vader_result" : "",
+            "trend_name": "", 
+        }
+        json_tweets.append(tweet_json_object)
+
+    return json_tweets
+
 def create_trend_json_object(trend, pos_result, neg_result, neu_result):
     trend_json_object = {
         "name": trend['name'],
