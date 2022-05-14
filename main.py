@@ -13,7 +13,7 @@ def traversing_english_trends(tweeter_trends):
     trend_array = list()
     trend_as_of = tweeter_trends['as_of']
     trend_created_at = tweeter_trends['created_at']
-    for i in range(1):
+    for i in range(10):
         trend_name = tweeter_trends['trends'][i]['name']
 
         total_positive = 0
@@ -63,7 +63,7 @@ def traversing_turkish_trends(tweeter_trends):
     turkish_analyzer = update_library_for_turkish()
     trend_as_of = tweeter_trends['as_of']
     trend_created_at = tweeter_trends['created_at']
-    for i in range(1):
+    for i in range(10):
         trend_name = tweeter_trends['trends'][i]['name']
 
         total_positive = 0
@@ -71,7 +71,7 @@ def traversing_turkish_trends(tweeter_trends):
         total_neutral = 0
         total_polarity = 0
 
-        tweets = services.get_turkish_tweets(trend_name, 100)
+        tweets = services.get_turkish_tweets(trend_name, 50)
         json_tweets = utility.create_tweet_json_array(tweets)
 
         find_unique_tweets(json_tweets)
