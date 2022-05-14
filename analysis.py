@@ -8,13 +8,13 @@ analyzer = SentimentIntensityAnalyzer()
 
 def update_trend_polarity_result(analysis_score): 
     if analysis_score > 0.05:
-        print("Positive for Vader")
+
         return 0, 1, 0
     elif analysis_score < -0.05:
-        print("Negative for Vader")
+
         return 0, 0, 1
     else:
-        print("Neutral for Vader")
+
         return 1, 0, 0
 
 def get_text_polarity(text):
@@ -24,9 +24,9 @@ def get_turkish_text_polarity(text, turkish_analyzer, morphology, normalizer):
     normalized_sentence = normalize_sentence(text,normalizer)
     no_stop_words_sentence = remove_stop_words(normalized_sentence)
     stemmed_sentence = stem_turkish_words(no_stop_words_sentence, morphology)
-    print(text + '==============>' + stemmed_sentence)
+
     polarity_score = (turkish_analyzer.polarity_scores(stemmed_sentence))["compound"]
-    print("----------- " , turkish_analyzer.polarity_scores(stemmed_sentence) , " -----------")
+
     return polarity_score
 
 def normalize_sentence(text, normalizer):

@@ -1,6 +1,8 @@
-import fileIO
-from vader_turkish_test import update_library_for_turkish
+tweet_json_object = {
+            "created_at": 1532,
+            "ege": "boktur",
+            "ekmen": "Görüldü yedi"
+        }
+tweet_json_object.pop()
 
-text = ' e indirim gelmiyor Aloooooo !!!!'
-
-analyzer = update_library_for_turkish()
+print(tweet_json_object)

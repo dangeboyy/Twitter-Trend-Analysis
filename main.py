@@ -9,23 +9,22 @@ from dbCon import insert_trends, insert_tweets, find_unique_tweets
 
 
 def traversing_english_trends(tweeter_trends):
+    print("start english")
     trend_array = list()
-    for i in range(len(tweeter_trends['trends'])):
-        trend_name = tweeter_trends['trends'][i + 1]['name']
-        print("Trend Name: " + trend_name)
+    for i in range(10):
+        trend_name = tweeter_trends['trends'][i]['name']
 
         total_positive = 0
         total_negative = 0
         total_neutral = 0
         total_polarity = 0
 
-        tweets = services.get_english_tweets(trend_name, 30)
+        tweets = services.get_english_tweets(trend_name, 100)
 
         json_tweets = utility.create_tweet_json_array(tweets)
 
         find_unique_tweets(json_tweets)
         for tweet in json_tweets:
-            print(tweet['full_text'])
 
             tweet_text_polarity = analysis.get_text_polarity(tweet['full_text'].replace(trend_name, ""))
 
@@ -38,37 +37,37 @@ def traversing_english_trends(tweeter_trends):
 
             tweet['vader_result'] = tweet_text_polarity
             tweet['trend_name'] = trend_name
-
-        fileIO.append_to_JSON_file(json_tweets, trend_name)
+            tweet.pop("unique")
+        # fileIO.append_to_JSON_file(json_tweets, trend_name)
         insert_tweets(json_tweets)
 
-        utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
+        # utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
         # utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
-        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i + 1], total_positive,
+        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i], total_positive,
                                                              total_negative, total_neutral)
         trend_array.append(trend_json_object)
 
-        break
     insert_trends(trend_array)
+    print("success english")
 
 
 # TODO parametre olarak en tr giricek
 def traversing_turkish_trends(tweeter_trends):
+    print("start turkish")
     trend_array = list()
     morphology = analysis.init_morphology_analiser()
     normalizer = analysis.init_normalizer(morphology)
     turkish_analyzer = update_library_for_turkish()
-    for i in range(len(tweeter_trends['trends'])):
-        trend_name = tweeter_trends['trends'][i + 1]['name']
-        print("Trend Name: " + trend_name)
+    for i in range(10):
+        trend_name = tweeter_trends['trends'][i]['name']
 
         total_positive = 0
         total_negative = 0
         total_neutral = 0
         total_polarity = 0
 
-        tweets = services.get_turkish_tweets(trend_name, 30)
+        tweets = services.get_turkish_tweets(trend_name, 100)
         json_tweets = utility.create_tweet_json_array(tweets)
 
         find_unique_tweets(json_tweets)
@@ -85,16 +84,18 @@ def traversing_turkish_trends(tweeter_trends):
 
             tweet['vader_result'] = tweet_text_polarity
             tweet['trend_name'] = trend_name
+            tweet.pop("unique")
 
-        fileIO.append_to_JSON_file(json_tweets, trend_name)
+        # fileIO.append_to_JSON_file(json_tweets, trend_name)
         insert_tweets(json_tweets)
-        utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
+        # utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
         # utility.create_charts(formated_positive, formated_negative, formated_neutral)
-        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i + 1], total_positive,
+        trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i], total_positive,
                                                              total_negative, total_neutral)
         trend_array.append(trend_json_object)
-        break
+
     insert_trends(trend_array)
+    print("success turkish")
 
 
 def write_trends(trend_data):
@@ -108,11 +109,11 @@ def initialize():
 
     # english
     trend_data = services.get_english_trends(api)
-    write_trends(trend_data)
+    # write_trends(trend_data)
     traversing_english_trends(trend_data[0])
     # turkish
     trend_data = services.get_turkish_trends(api)
-    write_trends(trend_data)
+    # write_trends(trend_data)
     traversing_turkish_trends(trend_data[0])
 
 

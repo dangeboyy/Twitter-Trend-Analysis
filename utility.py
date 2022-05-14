@@ -102,7 +102,8 @@ def create_trend_json_object(trend, pos_result, neg_result, neu_result):
         "tweet_volume": trend['tweet_volume'],
         "pos_result": pos_result,
         "neg_result": neg_result,
-        "neu_result": neu_result
+        "neu_result": neu_result,
+
     }
 
     return trend_json_object
