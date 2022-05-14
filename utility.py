@@ -82,30 +82,30 @@ def create_tweet_json_array(tweets):
     json_tweets = []
     for tweet in tweets:
         tweet_json_object = {
-            "created_at": tweet.created_at.strftime("%a %b %d %X %z %Y"),
-            "id": tweet.id,
-            "lang": tweet.lang,
-            "retweet_count": tweet.retweet_count,
-            "favorite_count": tweet.favorite_count,
-            "full_text": tweet.full_text,
-            "vader_result": "",
-            "trend_name": "",
+            "created_at" : tweet.created_at.strftime("%a %b %d %X %z %Y"),
+            "id" : tweet.id,
+            "retweet_count" : tweet.retweet_count,
+            "favorite_count" : tweet.favorite_count,
+            "full_text" : tweet.full_text,
+            "vader_result" : "",
+            "trend_name" : "",
+            "lang" : tweet.lang
         }
         json_tweets.append(tweet_json_object)
 
     return json_tweets
 
 
-def create_trend_json_object(trend, pos_result, neg_result, neu_result, trend_as_of, trend_created_at):
+def create_trend_json_object(trend, pos_result, neg_result, neu_result, trend_as_of, trend_created_at, lang):
     trend_json_object = {
         "as_of" : trend_as_of,
         "created_at" : trend_created_at,
-        "name": trend['name'],
-        "tweet_volume": trend['tweet_volume'],
-        "pos_result": pos_result,
-        "neg_result": neg_result,
-        "neu_result": neu_result,
-
+        "name" : trend['name'],
+        "tweet_volume" : trend['tweet_volume'],
+        "pos_result" : pos_result,
+        "neg_result" : neg_result,
+        "neu_result" : neu_result,
+        "lang" : lang
     }
 
     return trend_json_object

@@ -10,6 +10,7 @@ from dbCon import insert_trends, insert_tweets, find_unique_tweets
 
 def traversing_english_trends(tweeter_trends):
     print("start english")
+    lang = "en"
     trend_array = list()
     trend_as_of = tweeter_trends['as_of']
     trend_created_at = tweeter_trends['created_at']
@@ -47,7 +48,7 @@ def traversing_english_trends(tweeter_trends):
         # utility.create_charts(formated_positive, formated_negative, formated_neutral)
 
         trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i], total_positive,
-                                                             total_negative, total_neutral, trend_as_of, trend_created_at)
+                                                             total_negative, total_neutral, trend_as_of, trend_created_at, lang)
         trend_array.append(trend_json_object)
 
     insert_trends(trend_array)
@@ -57,6 +58,7 @@ def traversing_english_trends(tweeter_trends):
 # TODO parametre olarak en tr giricek
 def traversing_turkish_trends(tweeter_trends):
     print("start turkish")
+    lang = "tr"
     trend_array = list()
     morphology = analysis.init_morphology_analiser()
     normalizer = analysis.init_normalizer(morphology)
@@ -95,7 +97,7 @@ def traversing_turkish_trends(tweeter_trends):
         # utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
         # utility.create_charts(formated_positive, formated_negative, formated_neutral)
         trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i], total_positive,
-                                                             total_negative, total_neutral, trend_as_of, trend_created_at)
+                                                             total_negative, total_neutral, trend_as_of, trend_created_at, lang)
         trend_array.append(trend_json_object)
 
     insert_trends(trend_array)
