@@ -98,8 +98,8 @@ def create_tweet_json_array(tweets):
 
 def create_trend_json_object(trend, pos_result, neg_result, neu_result, trend_as_of, trend_created_at):
     trend_json_object = {
-        "as_of" : trend_as_of.strftime("%a %b %d %X %z %Y"),
-        "created_at" : trend_created_at.strftime("%a %b %d %X %z %Y"),
+        "as_of" : trend_as_of,
+        "created_at" : trend_created_at,
         "name": trend['name'],
         "tweet_volume": trend['tweet_volume'],
         "pos_result": pos_result,
