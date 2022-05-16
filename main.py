@@ -28,7 +28,7 @@ def traversing_english_trends(tweeter_trends):
 
         find_unique_tweets(json_tweets)
         for tweet in json_tweets:
-
+            print(tweet['full_text'])
             tweet_text_polarity = analysis.get_text_polarity(tweet['full_text'].replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
@@ -41,7 +41,7 @@ def traversing_english_trends(tweeter_trends):
             tweet['vader_result'] = tweet_text_polarity
             tweet['trend_name'] = trend_name
             tweet.pop("unique")
-        # fileIO.append_to_JSON_file(json_tweets, trend_name)
+        fileIO.append_to_JSON_file(json_tweets, trend_name)
         insert_tweets(json_tweets)
 
         # utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
@@ -73,12 +73,11 @@ def traversing_turkish_trends(tweeter_trends):
         total_neutral = 0
         total_polarity = 0
 
-        tweets = services.get_turkish_tweets(trend_name, 50)
+        tweets = services.get_turkish_tweets(trend_name, 25)
         json_tweets = utility.create_tweet_json_array(tweets)
 
         find_unique_tweets(json_tweets)
         for tweet in json_tweets:
-            # print(tweet.full_text)
             tweet_text_polarity = analysis.get_turkish_text_polarity(tweet['full_text'].replace(trend_name, ""),
                                                                      turkish_analyzer, morphology, normalizer)
 

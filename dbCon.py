@@ -51,6 +51,9 @@ def insert_trends(trend_list):
                                    {"$set": {
                                        "name": trend['name'],
                                        "tweet_volume": trend['tweet_volume'],
+                                       "lang": trend['lang'],
+                                       "created_at": trend['created_at'],
+                                       "as_of": trend['as_of']
                                    },
                                     "$inc": {
                                            "pos_result": trend['pos_result'],
