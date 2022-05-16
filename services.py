@@ -1,13 +1,17 @@
 # AUTHOR: İBRAHİM MERT EGE
 import tweepy
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 tweet_search_url = "https://api.twitter.com/1.1/search/tweets.json"
 
 def authenticate_api():
-    consumer_key = 'z9QiZqqYDtz2iuD6YbnuVo1NS'
-    consumer_secret_key = 'hWdiLwJjRhDKRGmqRnrCeRnDifZCRK6l42QplQHx9akGAr2Qk6'
-    accessToken = '2151490557-lq4g6HPL8MZxnaebT9foqC6Aa30FFFqXTY7Gtxp'
-    accessSecret = 'XpNAnbkoj6p0EnLuYvqm5vh0AWfJaaIFe80i1QWJ6HMQM'
+    consumer_key = os.environ.get('consumer_key')
+    consumer_secret_key = os.environ.get('consumer_secret_key')
+    accessToken = os.environ.get('accessToken')
+    accessSecret = os.environ.get('accessSecret')
 
     authentication = tweepy.OAuthHandler(consumer_key=consumer_key, consumer_secret=consumer_secret_key)
     authentication.set_access_token(accessToken, accessSecret)
