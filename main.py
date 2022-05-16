@@ -4,7 +4,7 @@ import services
 import fileIO
 import utility
 import analysis
-from vader_turkish_test import update_library_for_turkish
+from utility import update_library_for_turkish
 from dbCon import insert_trends, insert_tweets, find_unique_tweets
 
 
@@ -28,7 +28,6 @@ def traversing_english_trends(tweeter_trends):
 
         find_unique_tweets(json_tweets)
         for tweet in json_tweets:
-            print(tweet['full_text'])
             tweet_text_polarity = analysis.get_text_polarity(tweet['full_text'].replace(trend_name, ""))
 
             total_polarity += tweet_text_polarity
