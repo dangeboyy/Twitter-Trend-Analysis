@@ -70,7 +70,7 @@ def create_charts(positive, negative, neutral):
 # datetime.datetime.strptime(tweet.created_at, "%a %b %d %X %z %Y")
 def create_tweet_json_object(tweet, vader_result, trend_name):
     tweet_json_object = {
-        "created_at": datetime.strptime(tweet.created_at, "%a %b %d %H:%M:%S %z %Y").replace(tzinfo=None),
+        "created_at": tweet.created_at.replace(tzinfo=None),
         "id": tweet.id,
         "lang": tweet.lang,
         "retweet_count": tweet.retweet_count,
@@ -87,7 +87,7 @@ def create_tweet_json_array(tweets):
     json_tweets = []
     for tweet in tweets:
         tweet_json_object = {
-            "created_at" : datetime.strptime(tweet.created_at, "%a %b %d %H:%M:%S %z %Y").replace(tzinfo=None),
+            "created_at" : tweet.created_at.replace(tzinfo=None),
             "id" : tweet.id,
             "retweet_count" : tweet.retweet_count,
             "favorite_count" : tweet.favorite_count,
@@ -104,7 +104,7 @@ def create_tweet_json_array(tweets):
 def create_trend_json_object(trend, pos_result, neg_result, neu_result, trend_as_of, trend_created_at, lang):
     trend_created_at = trend_created_at.strip("Z")
     trend_json_object = {
-        "as_of" : trend_as_of,
+        "as_of" : datetime.strptime(trend_as_of, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=None),
         "created_at" : datetime.strptime(trend_created_at, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=None),
         "name" : trend['name'],
         "tweet_volume" : trend['tweet_volume'],
