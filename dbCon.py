@@ -59,6 +59,24 @@ def insert_tweets(tweet_list):
                                    upsert=True)
 
 
+def insert_one_trend(trend):
+    trends.find_one_and_update({"name": trend['name']},
+                                {"$set": {
+                                    "name": trend['name'],
+                                    "tweet_volume": trend['tweet_volume'],
+                                    "lang": trend['lang'],
+                                    "created_at": trend['created_at'],
+                                    "as_of": trend['as_of']
+                                },
+                                "$inc": {
+                                        "pos_result": trend['pos_result'],
+                                        "neg_result": trend['neg_result'],
+                                        "neu_result": trend['neu_result']
+                                    }
+
+                                },
+                                upsert=True)
+
 def insert_trends(trend_list):
     for trend in trend_list:
         trends.find_one_and_update({"name": trend['name']},

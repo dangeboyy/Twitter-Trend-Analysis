@@ -5,13 +5,13 @@ import fileIO
 import utility
 import analysis
 from utility import update_library_for_turkish
-from dbCon import insert_one_tweet, insert_trends, insert_tweets, find_unique_tweets
+from dbCon import insert_one_trend, insert_one_tweet, insert_trends, insert_tweets, find_unique_tweets
 
 
 def traversing_english_trends(tweeter_trends):
     print("start english")
     lang = "en"
-    trend_array = list()
+    #trend_array = list()
     trend_as_of = tweeter_trends['as_of']
     trend_created_at = tweeter_trends['created_at']
     for i in range(10):
@@ -49,9 +49,9 @@ def traversing_english_trends(tweeter_trends):
 
         trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i], total_positive,
                                                              total_negative, total_neutral, trend_as_of, trend_created_at, lang)
-        trend_array.append(trend_json_object)
-
-    insert_trends(trend_array)
+        #trend_array.append(trend_json_object)
+    insert_one_trend(trend_json_object)
+    #insert_trends(trend_array)
     print("success english")
 
 
@@ -59,7 +59,7 @@ def traversing_english_trends(tweeter_trends):
 def traversing_turkish_trends(tweeter_trends):
     print("start turkish")
     lang = "tr"
-    trend_array = list()
+    #trend_array = list()
     morphology = analysis.init_morphology_analiser()
     normalizer = analysis.init_normalizer(morphology)
     turkish_analyzer = update_library_for_turkish()
@@ -90,16 +90,19 @@ def traversing_turkish_trends(tweeter_trends):
             tweet['vader_result'] = tweet_text_polarity
             tweet['trend_name'] = trend_name
             tweet.pop("unique")
+            insert_one_tweet(tweet)
+            
 
         # fileIO.append_to_JSON_file(json_tweets, trend_name)
-        insert_tweets(json_tweets)
+        #insert_tweets(json_tweets)
         # utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
         # utility.create_charts(formated_positive, formated_negative, formated_neutral)
         trend_json_object = utility.create_trend_json_object(tweeter_trends['trends'][i], total_positive,
                                                              total_negative, total_neutral, trend_as_of, trend_created_at, lang)
-        trend_array.append(trend_json_object)
+        insert_one_trend(trend_json_object)
+        #trend_array.append(trend_json_object)
 
-    insert_trends(trend_array)
+    #insert_trends(trend_array)
     print("success turkish")
 
 
