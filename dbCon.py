@@ -29,6 +29,21 @@ def find_unique_tweets(tweet_list):
     
 
 
+def insert_one_tweet(tweet):
+    tweets.find_one_and_update({"id": tweet['id']},
+                                {"$set": {
+                                    "created_at": tweet['created_at'],
+                                    "id": tweet['id'],
+                                    "lang": tweet['lang'],
+                                    "retweet_count": tweet['retweet_count'],
+                                    "favorite_count": tweet['favorite_count'],
+                                    "full_text": tweet['full_text'],
+                                    "vader_result": tweet['vader_result'],
+                                    "trend_name": tweet['trend_name']
+                                }
+                                },
+                                upsert=True)
+
 def insert_tweets(tweet_list):
     tweets.insert_many(tweet_list)
     for tweet in tweet_list:

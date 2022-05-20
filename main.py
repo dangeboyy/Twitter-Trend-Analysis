@@ -5,7 +5,7 @@ import fileIO
 import utility
 import analysis
 from utility import update_library_for_turkish
-from dbCon import insert_trends, insert_tweets, find_unique_tweets
+from dbCon import insert_one_tweet, insert_trends, insert_tweets, find_unique_tweets
 
 
 def traversing_english_trends(tweeter_trends):
@@ -40,8 +40,9 @@ def traversing_english_trends(tweeter_trends):
             tweet['vader_result'] = tweet_text_polarity
             tweet['trend_name'] = trend_name
             tweet.pop("unique")
-        fileIO.append_to_JSON_file(json_tweets, trend_name)
-        insert_tweets(json_tweets)
+            insert_one_tweet(tweet)
+        #fileIO.append_to_JSON_file(json_tweets, trend_name)
+        #insert_tweets(json_tweets)
 
         # utility.print_results(total_positive, total_negative, total_neutral, total_polarity)
         # utility.create_charts(formated_positive, formated_negative, formated_neutral)
